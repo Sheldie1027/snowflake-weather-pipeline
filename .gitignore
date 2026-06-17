@@ -222,3 +222,6 @@ venv/
 __pycache__/
 *.pyc
 .env
+
+config/rsa_key.pem
+config/rsa_key.pub
