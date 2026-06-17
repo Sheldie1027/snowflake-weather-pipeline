@@ -1,3 +1,5 @@
+--WINDOW FUNCTIONS--
+
 -- Number each reading per city ordered by time
 SELECT
     city,
