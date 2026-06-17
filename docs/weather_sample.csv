@@ -1,0 +1,10 @@
+city,country,recorded_at,temperature_c,humidity_pct,windspeed_kmh,weather_code
+Mumbai,India,2026-06-10 06:00:00,31.5,80.0,13.0,2
+Mumbai,India,2026-06-10 07:00:00,32.2,77.5,11.5,2
+Mumbai,India,2026-06-10 08:00:00,33.0,74.0,14.0,1
+Bangalore,India,2026-06-10 06:00:00,23.8,67.0,7.5,0
+Bangalore,India,2026-06-10 07:00:00,24.5,65.0,8.0,0
+Bangalore,India,2026-06-10 08:00:00,25.3,62.0,8.5,1
+Delhi,India,2026-06-10 06:00:00,37.5,47.0,17.0,3
+Delhi,India,2026-06-10 07:00:00,38.8,44.0,19.5,3
+Delhi,India,2026-06-10 08:00:00,39.9,41.0,21.0,2
