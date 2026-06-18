@@ -1,0 +1,21 @@
+**Overview:**
+
+- Chennai experienced extremely hot conditions, with an average temperature of 36.85°C and high humidity (81.0%).
+- Delhi had a wide temperature range (23.4°C to 38.8°C), with relatively low humidity (54.69%).
+- Mumbai's temperature was relatively stable, with an average of 31.2°C and moderate humidity (65.25%).
+- Bangalore had a mild climate, with an average temperature of 24.28°C and high humidity (75.92%).
+
+**Notable Observations:**
+
+- Hottest city: Chennai (36.85°C average temperature)
+- Coolest city: Bangalore (24.28°C average temperature)
+- Most humid city: Bangalore (75.92% average humidity)
+- Chance of precipitation: Delhi had the highest chance of precipitation, with an implied high dew point and temperature range.
+
+**Anomalies/Patterns:**
+
+- Chennai's high temperature and humidity are consistent with its tropical climate.
+- Delhi's wide temperature range suggests a mix of hot and cool air masses.
+
+**Practical Takeaway:**
+Prepare for extreme heat in Chennai and potential precipitation in Delhi during this period.
