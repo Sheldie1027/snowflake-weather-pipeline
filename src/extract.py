@@ -19,7 +19,7 @@ BASE_URL = "https://api.open-meteo.com/v1/forecast"
 
 PARAMS = {
     "hourly": "temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code",
-    "past_days": 7,
+    "past_days": 30,
     "forecast_days": 1,
     "timezone": "Asia/Kolkata"
 }

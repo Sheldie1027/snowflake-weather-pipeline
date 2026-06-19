@@ -75,10 +75,10 @@ def generate_full_report() -> str:
         Given statistics from a data pipeline covering multiple Indian cities:
         1. Write a professional 3-4 sentence executive summary of conditions of each city
         2. Identify which city had the most extreme conditions and why that matters
-        3. Flag any patterns worth investigating (humidity, wind, temperature swings)
+        3. Flag any patterns worth investigating (humidity, wind, temperature swings, feels like temperature vs recorded temperature)
         4. Give one actionable insight a city planner or traveller could use
-        5. Relation to the current weather condition of these cities in relation to climatic conditions
-        Keep it under 250 words. Use specific numbers. Sound professional.""",
+        5. Relation of the current weather condition of these cities w.r.t climatic conditions observed every year
+        Keep it under 350 words. Use specific numbers. Sound professional.""",
         user_message=f"Generate a weather intelligence report from this data:\n\n{data_text}",
         temperature=0.2
     )
