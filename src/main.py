@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from extract import extract_all_cities
 from transform import transform_weather_data
 from snowflake_client import get_connection, run_query, load_dataframe
-from ai_summary import generate_weather_summary
+from ai_summary import generate_full_report
 
 logging.basicConfig(
     level=logging.INFO,
@@ -112,7 +112,7 @@ def run_pipeline():
 
     # Step 5: AI Summary
     logger.info("STEP 5: Generating AI summary...")
-    summary = generate_weather_summary()
+    summary = generate_full_report()
     logger.info(f"AI Summary:\n{summary}")
 
     with open("docs/ai_summary_output.txt", "w") as f:

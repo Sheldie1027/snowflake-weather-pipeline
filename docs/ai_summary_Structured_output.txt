@@ -1,0 +1,6 @@
+OVERVIEW: A heatwave is affecting major cities in India, with temperatures soaring above average levels. The high humidity in some areas has led to increased instances of rain and thunderstorms.
+
+HOTTEST CITY: Delhi at 38.7°C
+COOLEST CITY: Bengaluru at 19.7°C
+KEY PATTERN: A high-pressure system is dominating the region, leading to clear skies and hot temperatures during the day, followed by thunderstorms and rain in the evening.
+RECOMMENDATION: Residents are advised to stay hydrated and take necessary precautions to avoid heat-related illnesses, especially during the peak sun hours.

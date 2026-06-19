@@ -30,6 +30,7 @@ def get_connection():
         warehouse=os.getenv("SNOWFLAKE_WAREHOUSE"),
         database=os.getenv("SNOWFLAKE_DATABASE"),
         schema=os.getenv("SNOWFLAKE_SCHEMA"),
+        role=os.getenv("SNOWFLAKE_ROLE", "SYSADMIN"),
         session_parameters={
             "QUERY_TAG": "weather-pipeline-python"
         }
