@@ -1,21 +1,23 @@
-**Overview:**
+Run ID: 20260619_065751
+Generated: 2026-06-19 06:58:04.717462+00:00
 
-- Chennai experienced extremely hot conditions, with an average temperature of 36.85°C and high humidity (81.0%).
-- Delhi had a wide temperature range (23.4°C to 38.8°C), with relatively low humidity (54.69%).
-- Mumbai's temperature was relatively stable, with an average of 31.2°C and moderate humidity (65.25%).
-- Bangalore had a mild climate, with an average temperature of 24.28°C and high humidity (75.92%).
+**City Overview:**
+
+- Mumbai experienced a warm and humid climate with average temperatures ranging from 28.9°C to 33.9°C, and moderate humidity levels around 63.86%.
+- Delhi saw a hot and dry climate with average temperatures between 23.4°C and 38.7°C, and relatively low humidity levels at 54.58%.
+- Bangalore had a mild climate with average temperatures between 19.7°C and 30.9°C, and high humidity levels at 75.2%.
 
 **Notable Observations:**
 
-- Hottest city: Chennai (36.85°C average temperature)
-- Coolest city: Bangalore (24.28°C average temperature)
-- Most humid city: Bangalore (75.92% average humidity)
-- Chance of precipitation: Delhi had the highest chance of precipitation, with an implied high dew point and temperature range.
+- Delhi was the hottest city with a maximum temperature of 38.7°C.
+- Bangalore was the coolest city with a minimum temperature of 19.7°C.
+- Mumbai had the highest humidity levels at 63.86%.
+- Delhi had the lowest chance of precipitation due to its low humidity levels.
 
-**Anomalies/Patterns:**
+**Anomalies and Patterns:**
 
-- Chennai's high temperature and humidity are consistent with its tropical climate.
-- Delhi's wide temperature range suggests a mix of hot and cool air masses.
+- Delhi's temperature range was significantly higher than the other two cities, indicating a heatwave.
+- Bangalore's high humidity levels were consistent throughout the period.
 
 **Practical Takeaway:**
-Prepare for extreme heat in Chennai and potential precipitation in Delhi during this period.
+Plan outdoor activities in Bangalore during the cooler morning hours, while avoiding peak sun hours in Delhi and Mumbai.
