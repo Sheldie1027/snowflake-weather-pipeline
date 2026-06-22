@@ -77,7 +77,7 @@ FROM (
 WHERE avg_temp > 30
 ORDER BY avg_temp DESC;
 
--- CTE version (same result, much cleaner)
+---CTE version (same result, much cleaner)
 WITH daily_averages AS (
     SELECT
         city,
