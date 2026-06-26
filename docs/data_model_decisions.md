@@ -30,3 +30,23 @@ Benefit: you can compare weather vs air quality on the same date
 Used by :FACT_WEATHER_READINGS
 Meaning: contains low cardinality flag columns that are used FACT_WEATHER_READINGS using the key flag_Sk
 Benefit: one place for low cardinality columns instead of their own dimension tables
+
+## Kimball vs Data Vault — When to Use Each
+
+### Kimball Star Schema (my analytics layer)
+Chosen for: fast analytical queries, simple joins, BI-friendly structure
+Best when: the use case is known and analytics-focused
+Tradeoff: less flexible if source structure changes frequently
+
+### Data Vault (my audit/history layer)
+Chosen for: full auditability, handling schema changes, multiple source systems
+Best when: regulated environments, complex enterprise data, evolving sources
+Tradeoff: more complex to query — usually sits between raw and marts
+
+### My pipeline's approach
+RAW (landing) → Data Vault (audit-friendly history) → Star Schema (analytics)
+This hybrid gives both auditability and query performance.
+
+
+### Known Improvements
+Need to delete old data before inserting for the same day or use upsert instead.
