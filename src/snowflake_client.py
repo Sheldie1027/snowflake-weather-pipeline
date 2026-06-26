@@ -5,11 +5,17 @@ from cryptography.hazmat.primitives import serialization
 import snowflake.connector
 from snowflake.connector.pandas_tools import write_pandas
 
-load_dotenv("config/.env")
+if os.path.exists("/opt/airflow/config/.env"):
+    load_dotenv("/opt/airflow/config/.env")
+    PRIVATE_KEY_PATH = "/opt/airflow/config/rsa_key.pem"
+else:
+    load_dotenv("config/.env")
+    PRIVATE_KEY_PATH = "config/rsa_key.pem"
+
 logger = logging.getLogger(__name__)
 
 def get_private_key():
-    with open(os.getenv("SNOWFLAKE_PRIVATE_KEY_PATH"), "rb") as f:
+    with open(PRIVATE_KEY_PATH, "rb") as f:
         private_key = serialization.load_pem_private_key(
             f.read(),
             password=None

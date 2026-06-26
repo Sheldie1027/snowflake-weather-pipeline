@@ -1,0 +1,9 @@
+apache-airflow-providers-snowflake
+apache-airflow-providers-http
+pandas
+requests
+snowflake-connector-python[pandas]
+python-dotenv
+groq
+tenacity
+cryptography

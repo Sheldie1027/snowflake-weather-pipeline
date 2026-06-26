@@ -225,3 +225,9 @@ __pycache__/
 
 config/rsa_key.pem
 config/rsa_key.pub
+
+# Airflow
+airflow/logs/
+airflow/plugins/
+airflow-project/
+*.log
