@@ -62,11 +62,6 @@ access control — all built with free tooling and no incurred costs.
                                                               │ AI Intelligence Report   │
                                                               └──────────────────────────┘
 ```
-
-A visual version of the pipeline architecture:
-
-![Architecture](docs/architecture.png)
-
 ---
 
 ## Data Sources
