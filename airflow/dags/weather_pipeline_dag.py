@@ -36,7 +36,7 @@ def weather_pipeline():
         ,mode = "reschedule"
     )
 
-    @task
+    @task(pool="open_meteo_pool")
     def weather_extract():
         from extract import extract_all_cities
         df = extract_all_cities()

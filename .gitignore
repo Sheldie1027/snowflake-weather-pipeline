@@ -231,3 +231,8 @@ airflow/logs/
 airflow/plugins/
 airflow-project/
 *.log
+
+#DBT
+dbt/weather_dbt/target/
+dbt/weather_dbt/dbt_packages/
+dbt/weather_dbt/logs/

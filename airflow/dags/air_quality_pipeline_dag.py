@@ -28,7 +28,7 @@ def air_quality_pipeline():
     def get_run_id() -> str:
         return datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     
-    @task
+    @task(pool="open_meteo_pool")
     def extract_air_quality():
         from extract_air_quality import extract_all_air_quality
         df = extract_all_air_quality()
