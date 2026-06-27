@@ -1,0 +1,1 @@
+Streams + Tasks enable warehouse-native incremental processing. Airflow handles external ingestion (API → RAW), while a Stream + Task could handle internal incremental movement (RAW → MARTS) entirely inside Snowflake — only processing new rows, only consuming credits when data exists. This hybrid keeps external orchestration in Airflow and internal transforms in Snowflake.
