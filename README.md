@@ -62,9 +62,6 @@ access control — all built with free tooling and no incurred costs.
                                                               │ AI Intelligence Report   │
                                                               └──────────────────────────┘
 ```
-
-![Architecture](docs\architecture.png)
-
 ---
 
 ## Data Sources
