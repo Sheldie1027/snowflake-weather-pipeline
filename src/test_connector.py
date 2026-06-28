@@ -13,12 +13,12 @@ def main():
 
     # Test 2: count rows in your table
     print("\n=== TEST 2: Row count ===")
-    results = run_query("SELECT COUNT(*) FROM RAW_WEATHER_LOAD", conn)
+    results = run_query("SELECT COUNT(*) AS cnt FROM RAW_WEATHER_API", conn)
     print(f"Rows in RAW_WEATHER_LOAD: {results[0][0]}")
 
     # Test 3: fetch as DataFrame
     print("\n=== TEST 3: Fetch as DataFrame ===")
-    df = run_query_df("SELECT city, AVG(temperature_c) as avg_temp FROM RAW_WEATHER_LOAD GROUP BY city", conn)
+    df = run_query_df("SELECT city, AVG(temperature_c) as avg_temp FROM RAW_WEATHER_API GROUP BY city", conn)
     print(df)
 
     conn.close()
