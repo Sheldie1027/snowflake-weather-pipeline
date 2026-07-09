@@ -20,12 +20,12 @@ city as (
 final as (
 
     select
-        md5(upper(trim(w.city_name)) || '|' ||
-            to_varchar(w.recorded_at, 'YYYY-MM-DD HH24:MI:SS'))  as reading_sk,
+        {{ dbt_utils.generate_surrogate_key(['w.city_name', 'w.recorded_at']) }} as reading_sk,
         c.city_sk,
         w.recorded_at,
         date(w.recorded_at) as reading_date,
         w.temperature_c,
+        {{ celsius_to_fahrenheit('w.temperature_c') }} as temperature_f,
         w.humidity_pct,
         w.windspeed_kmh,
         w.weather_code,

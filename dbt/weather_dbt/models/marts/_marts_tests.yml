@@ -2,29 +2,57 @@ version: 2
 
 models:
   - name: dim_city
-    description: "City dimension"
+    description: >
+      City dimension. One row per unique city with geographic attributes.
+      Surrogate key generated from the city name.
     columns:
       - name: city_sk
-        description: "Surrogate key for the city"
+        description: "Surrogate key (MD5 hash of city name)"
         tests:
           - unique
           - not_null
       - name: city_name
+        description: "City display name"
         tests:
           - not_null
+      - name: country
+        description: "Country the city belongs to"
+      - name: latitude
+        description: "Geographic latitude"
+      - name: longitude
+        description: "Geographic longitude"
 
   - name: fct_weather_readings
-    description: "Weather readings fact table"
+    description: >
+      Weather readings fact table at hourly grain. One row per city per hour.
+      Incrementally materialized. Joined to dim_city via city_sk.
     columns:
       - name: reading_sk
-        description: "Surrogate key for the reading"
+        description: "Surrogate key (MD5 of city + timestamp)"
         tests:
           - unique
           - not_null
       - name: city_sk
-        description: "FK to dim_city"
+        description: "Foreign key to dim_city"
         tests:
           - not_null
           - relationships:
               to: ref('dim_city')
               field: city_sk
+      - name: temperature_c
+        description: "Air temperature in Celsius"
+      - name: humidity_pct
+        description: "Relative humidity percentage"
+
+  - name: fct_air_quality_readings
+    description: >
+      Air quality readings fact at hourly grain. One row per city per hour.
+      Joined to dim_city via city_sk.
+    columns:
+      - name: reading_sk
+        description: "Surrogate key (MD5 of city + timestamp)"
+        tests:
+          - unique
+          - not_null
+      - name: pm2_5
+        description: "Fine particulate matter (ug/m3)"

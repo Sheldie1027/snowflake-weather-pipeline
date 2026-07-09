@@ -2,31 +2,38 @@ version: 2
 
 models:
   - name: stg_weather
-    description: "Cleaned hourly weather readings"
+    description: >
+      Cleaned and deduplicated hourly weather readings per city.
+      Sourced from RAW_WEATHER_API. Keeps only the latest load per
+      city and timestamp, and drops rows with null temperature.
     columns:
       - name: city_name
-        description: "Name of the city"
+        description: "Name of the Indian city (Mumbai, Bangalore, Delhi, Chennai)"
         tests:
           - not_null
           - accepted_values:
               values: ['Mumbai', 'Bangalore', 'Delhi', 'Chennai']
       - name: recorded_at
-        description: "Timestamp of the reading"
+        description: "Timestamp of the weather reading (hourly grain)"
         tests:
           - not_null
       - name: temperature_c
-        description: "Temperature in Celsius"
+        description: "Air temperature in degrees Celsius"
         tests:
           - not_null
 
   - name: stg_air_quality
-    description: "Cleaned hourly air quality readings"
+    description: >
+      Cleaned and deduplicated hourly air quality readings per city.
+      Sourced from RAW_AIR_QUALITY.
     columns:
       - name: city_name
+        description: "Name of the Indian city"
         tests:
           - not_null
           - accepted_values:
               values: ['Mumbai', 'Bangalore', 'Delhi', 'Chennai']
       - name: pm2_5
+        description: "Fine particulate matter concentration (ug/m3)"
         tests:
           - not_null

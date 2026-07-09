@@ -12,7 +12,7 @@ with weather as (
 final as (
 
     select
-        md5(upper(trim(city_name)))  as city_sk,
+        {{ dbt_utils.generate_surrogate_key(['city_name']) }} as city_sk,
         city_name,
         country,
         latitude,

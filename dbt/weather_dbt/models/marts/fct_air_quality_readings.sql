@@ -13,8 +13,7 @@ city as (
 final as (
 
     select
-        md5(upper(trim(aq.city_name)) || '|' ||
-            to_varchar(aq.recorded_at, 'YYYY-MM-DD HH24:MI:SS'))  as reading_sk,
+        {{ dbt_utils.generate_surrogate_key(['aq.city_name', 'aq.recorded_at']) }} as reading_sk,
         c.city_sk,
         aq.recorded_at,
         date(aq.recorded_at) as reading_date,

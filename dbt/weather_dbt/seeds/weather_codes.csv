@@ -1,0 +1,10 @@
+code_value,description,category,severity
+0,Clear sky,Clear,Low
+1,Mainly clear,Clear,Low
+2,Partly cloudy,Cloudy,Low
+3,Overcast,Cloudy,Low
+45,Foggy,Fog,Medium
+51,Light drizzle,Rain,Low
+61,Slight rain,Rain,Medium
+80,Slight rain showers,Rain,Medium
+95,Thunderstorm,Thunderstorm,High
