@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: raw
+    database: WEATHER_DB
+    schema: RAW
+    description: "Raw landing tables loaded by the Airflow pipeline from Open-Meteo APIs"
+    tables:
+      - name: raw_weather_api
+        description: "Hourly weather readings per city"
+      - name: raw_air_quality
+        description: "Hourly air quality readings per city"

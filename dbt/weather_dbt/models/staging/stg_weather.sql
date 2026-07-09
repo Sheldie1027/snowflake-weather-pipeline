@@ -1,0 +1,28 @@
+{{ config(materialized='view') }}
+
+with source as (
+
+    select * from {{ source('raw', 'raw_weather_api') }}
+
+),
+
+cleaned as (
+
+    select
+        city as city_name,
+        country,
+        latitude,
+        longitude,
+        recorded_at,
+        temperature_c,
+        humidity_pct,
+        windspeed_kmh,
+        weather_code,
+        pipeline_run_id,
+        loaded_at
+    from source
+    where temperature_c is not null
+
+)
+
+select * from cleaned
