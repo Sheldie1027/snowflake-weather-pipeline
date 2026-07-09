@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: dim_city
+    description: "City dimension"
+    columns:
+      - name: city_sk
+        description: "Surrogate key for the city"
+        tests:
+          - unique
+          - not_null
+      - name: city_name
+        tests:
+          - not_null
+
+  - name: fct_weather_readings
+    description: "Weather readings fact table"
+    columns:
+      - name: reading_sk
+        description: "Surrogate key for the reading"
+        tests:
+          - unique
+          - not_null
+      - name: city_sk
+        description: "FK to dim_city"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_city')
+              field: city_sk

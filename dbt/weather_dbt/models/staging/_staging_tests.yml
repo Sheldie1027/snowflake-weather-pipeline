@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: stg_weather
+    description: "Cleaned hourly weather readings"
+    columns:
+      - name: city_name
+        description: "Name of the city"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Mumbai', 'Bangalore', 'Delhi', 'Chennai']
+      - name: recorded_at
+        description: "Timestamp of the reading"
+        tests:
+          - not_null
+      - name: temperature_c
+        description: "Temperature in Celsius"
+        tests:
+          - not_null
+
+  - name: stg_air_quality
+    description: "Cleaned hourly air quality readings"
+    columns:
+      - name: city_name
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Mumbai', 'Bangalore', 'Delhi', 'Chennai']
+      - name: pm2_5
+        tests:
+          - not_null

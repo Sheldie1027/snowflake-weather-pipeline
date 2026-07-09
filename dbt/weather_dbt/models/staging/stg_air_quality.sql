@@ -4,6 +4,19 @@ with source as (
 
 ),
 
+deduplicated as (
+
+    select
+        *,
+        row_number() over (
+            partition by city, recorded_at
+            order by loaded_at desc
+        ) as rn
+    from source
+    where pm2_5 is not null
+
+),
+
 cleaned as (
 
     select
@@ -17,8 +30,8 @@ cleaned as (
         carbon_monoxide,
         pipeline_run_id,
         loaded_at
-    from source
-    where pm2_5 is not null
+    from deduplicated
+    where rn = 1
 
 )
 
