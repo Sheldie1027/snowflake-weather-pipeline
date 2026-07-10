@@ -1,7 +1,8 @@
 {{
     config(
         materialized='incremental',
-        unique_key='reading_sk'
+        unique_key='reading_sk',
+        incremental_strategy='merge'
     )
 }}
 

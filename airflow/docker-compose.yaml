@@ -80,6 +80,8 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
     - C:\Users\sheld\OneDrive\Desktop\snowflake-weather-pipeline\config:/opt/airflow/config
     - C:\Users\sheld\OneDrive\Desktop\snowflake-weather-pipeline\src:/opt/airflow/pipeline_src
+    - C:\Users\sheld\OneDrive\Desktop\snowflake-weather-pipeline\dbt\weather_dbt:/opt/airflow/dbt/weather_dbt
+    - C:\Users\sheld\.dbt:/opt/airflow/.dbt
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on

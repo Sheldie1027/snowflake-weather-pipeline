@@ -3,6 +3,7 @@ from airflow.providers.http.sensors.http import HttpSensor
 from airflow.models import Variable
 from airflow.models.baseoperator import chain
 from datetime import datetime, timezone, timedelta
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 import logging 
 import sys
 
@@ -118,6 +119,11 @@ def weather_pipeline():
     def get_run_id() -> str:
         return datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     
+    trigger_dbt = TriggerDagRunOperator(
+        task_id="trigger_dbt_transform",
+        trigger_dag_id="dbt_transform_dag",
+    )
+    
 
     pipeline_run_id = get_run_id()
     raw_data = weather_extract()
@@ -125,6 +131,7 @@ def weather_pipeline():
     fact_loaded = load_fact(pipeline_run_id)
     summary = generate_ai_summary()
 
-    chain (wait_for_api, raw_data, rows_loaded, fact_loaded, summary)
+    from airflow.models.baseoperator import chain
+    chain (wait_for_api, raw_data, rows_loaded, fact_loaded, summary, trigger_dbt)
 
 weather_pipeline()
