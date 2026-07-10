@@ -16,3 +16,6 @@ TRANSFORM: Airflow triggers a separate dbt DAG (RAW to staging to marts, with te
 Ingestion DAG chains to the dbt DAG via TriggerDagRunOperator
 dbt runs in an isolated venv inside the container to avoid dependency conflicts with Airflow
 This separates imperative E+L (Python) from declarative T (dbt) — the defining pattern of the modern data stack.
+
+The AI summary now reads from mart_city_daily_summary — a tested, documented dbt mart — instead of ad-hoc raw SQL. This means the AI's input is validated by dbt tests every run:
+if temperature is out of range or a city+date duplicates, the pipeline fails before the AI sees bad data. The exposure in dbt documents this dependency in the lineage graph.

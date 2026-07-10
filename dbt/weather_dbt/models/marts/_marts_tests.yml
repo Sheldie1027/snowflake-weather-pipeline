@@ -26,6 +26,10 @@ models:
     description: >
       Weather readings fact table at hourly grain. One row per city per hour.
       Incrementally materialized. Joined to dim_city via city_sk.
+    tests:
+      - dbt_expectations.expect_table_row_count_to_be_between:
+          min_value: 1
+          max_value: 1000000
     columns:
       - name: reading_sk
         description: "Surrogate key (MD5 of city + timestamp)"
@@ -56,3 +60,27 @@ models:
           - not_null
       - name: pm2_5
         description: "Fine particulate matter (ug/m3)"
+
+  - name: mart_city_daily_summary
+    description: >
+      Daily summary per city combining weather and air quality metrics.
+      One row per city per day. Feeds the AI intelligence report.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - city_name
+            - reading_date
+    columns:
+      - name: city_name
+        description: "City name"
+        tests:
+          - not_null
+      - name: reading_date
+        description: "Calendar date of the summary"
+        tests:
+          - not_null
+      - name: air_quality_category
+        description: "Good / Moderate / Unhealthy based on avg PM2.5"
+        tests:
+          - accepted_values:
+              values: ['Good', 'Moderate', 'Unhealthy']

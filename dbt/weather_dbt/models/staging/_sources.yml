@@ -8,5 +8,13 @@ sources:
     tables:
       - name: raw_weather_api
         description: "Hourly weather readings per city"
+        loaded_at_field: loaded_at
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
       - name: raw_air_quality
         description: "Hourly air quality readings per city"
+        loaded_at_field: loaded_at
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}

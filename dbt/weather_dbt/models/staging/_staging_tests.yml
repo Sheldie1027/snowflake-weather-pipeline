@@ -21,6 +21,17 @@ models:
         description: "Air temperature in degrees Celsius"
         tests:
           - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: -50
+              max_value: 60
+              row_condition: "temperature_c is not null"
+      - name: humidity_pct
+        description: "Relative humidity percentage"
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 100
+              row_condition: "humidity_pct is not null"
 
   - name: stg_air_quality
     description: >
@@ -37,3 +48,7 @@ models:
         description: "Fine particulate matter concentration (ug/m3)"
         tests:
           - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 1000
+              row_condition: "pm2_5 is not null"

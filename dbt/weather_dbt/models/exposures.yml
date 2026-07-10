@@ -1,0 +1,17 @@
+version: 2
+
+exposures:
+  - name: weather_ai_report
+    label: "Weather Intelligence AI Report"
+    type: analysis
+    maturity: medium
+    url: "https://github.com/Sheldie1027/snowflake-weather-pipeline"
+    description: >
+      An AI-generated weather intelligence report produced by Groq LLaMA,
+      summarising conditions across the four Indian cities. Reads from the
+      analytics marts.
+    depends_on:
+      - ref('fct_weather_readings')
+      - ref('fct_air_quality_readings')
+    owner:
+      name: Sheldon Monteiro

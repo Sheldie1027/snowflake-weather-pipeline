@@ -8,60 +8,39 @@ logger = logging.getLogger(__name__)
 
 
 def fetch_rich_summary() -> str:
+    
+    """
+    Pull the daily city summary from the dbt-built mart for AI analysis.
+    """
 
     query = """
-        WITH daily_stats AS (
-            SELECT
-                c.city_name,
-                c.state,
-                d.full_date,
-                d.day_of_week,
-                w.category                          AS weather_category,
-                ROUND(AVG(f.temperature_c), 2)      AS avg_temp,
-                MAX(f.temperature_c)                AS max_temp,
-                MIN(f.temperature_c)                AS min_temp,
-                ROUND(AVG(f.humidity_pct), 2)       AS avg_humidity,
-                ROUND(AVG(f.windspeed_kmh), 2)      AS avg_wind
-            FROM WEATHER_DB.MARTS.FACT_WEATHER_READINGS f
-            JOIN WEATHER_DB.MARTS.DIM_CITY c
-                ON f.city_sk = c.city_sk AND c.is_current = TRUE
-            JOIN WEATHER_DB.MARTS.DIM_DATE d
-                ON f.date_sk = d.date_sk
-            JOIN WEATHER_DB.MARTS.DIM_WEATHER_CODE w
-                ON f.weather_code_sk = w.code_sk
-            GROUP BY c.city_name, c.state, d.full_date, d.day_of_week, w.category
-        ),
-        city_summary AS (
-            SELECT
-                city_name,
-                state,
-                ROUND(AVG(avg_temp), 2)             AS overall_avg_temp,
-                MAX(max_temp)                       AS overall_max_temp,
-                MIN(min_temp)                       AS overall_min_temp,
-                ROUND(AVG(avg_humidity), 2)         AS overall_avg_humidity,
-                COUNT(DISTINCT full_date)           AS days_of_data,
-                LISTAGG(DISTINCT weather_category, ', ')
-                    WITHIN GROUP (ORDER BY weather_category) AS conditions_seen
-            FROM daily_stats
-            GROUP BY city_name, state
-        )
-        SELECT * FROM city_summary ORDER BY overall_avg_temp DESC
+        SELECT
+            city_name,
+            reading_date,
+            avg_temp,
+            max_temp,
+            min_temp,
+            avg_humidity,
+            avg_pm25,
+            avg_uv,
+            air_quality_category
+        FROM WEATHER_DB.DBT_DEV.MART_CITY_DAILY_SUMMARY
+        ORDER BY reading_date DESC, city_name
+        LIMIT 40
     """
 
     df = run_query_df(query)
     if df.empty:
-        return "No data available in FACT tables yet."
+        return "No data available in the daily summary mart yet."
 
-    lines = [f"Weather Intelligence Report — Generated {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M')} UTC\n"]
+    lines = [f"Weather & Air Quality Daily Summary — generated {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M')} UTC\n"]
     for _, row in df.iterrows():
         lines.append(
-            f"• {row['CITY_NAME']} ({row['STATE']}): "
-            f"Avg {row['OVERALL_AVG_TEMP']}°C | "
-            f"Peak {row['OVERALL_MAX_TEMP']}°C | "
-            f"Low {row['OVERALL_MIN_TEMP']}°C | "
-            f"Humidity {row['OVERALL_AVG_HUMIDITY']}% | "
-            f"Conditions: {row['CONDITIONS_SEEN']} | "
-            f"{row['DAYS_OF_DATA']} days of data"
+            f"- {row['CITY_NAME']} ({row['READING_DATE']}): "
+            f"Avg {row['AVG_TEMP']}C (max {row['MAX_TEMP']}, min {row['MIN_TEMP']}) | "
+            f"Humidity {row['AVG_HUMIDITY']}% | "
+            f"PM2.5 {row['AVG_PM25']} ({row['AIR_QUALITY_CATEGORY']}) | "
+            f"UV {row['AVG_UV']}"
         )
     return "\n".join(lines)
 
