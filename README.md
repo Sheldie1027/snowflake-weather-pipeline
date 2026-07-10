@@ -32,39 +32,6 @@ control — all built with free tooling and no incurred costs.
 
 ## Architecture
 
-```
-                          +-------------------------------------------+
-                          |         Apache Airflow (Docker)           |
-                          |   weather_pipeline_dag (daily 7am IST)    |
-                          |   air_quality_pipeline_dag (daily 7am)    |
-                          +---------------------+---------------------+
-                                                | orchestrates
-        +----------------------------------------+----------------------------------------+
-        v                                        v                                        v
-+---------------+   HTTP/JSON   +--------------------------+   write_pandas   +------------------+
-| Open-Meteo    | ------------> |  Python (requests +      | ---------------> | Snowflake RAW    |
-| Weather API   |               |  pandas) Extract +       |                  | layer            |
-| Air Quality   |               |  Transform               |                  |                  |
-| API           |               +--------------------------+                  +--------+---------+
-+---------------+                                                                      | INSERT...SELECT
-                                                                                       v
-                                                      +---------------------------------------------+
-                                                      | Snowflake MARTS layer                       |
-                                                      |  Star Schema:                               |
-                                                      |   FACT_WEATHER_READINGS                     |
-                                                      |   FACT_AIR_QUALITY_READINGS                 |
-                                                      |   DIM_CITY (SCD2) . DIM_DATE . DIM_WEATHER  |
-                                                      |  Data Vault (parallel):                     |
-                                                      |   HUB . LINK . SAT                          |
-                                                      +---------------------+-----------------------+
-                                                                            | query results
-                                                                            v
-                                                              +--------------------------+
-                                                              | Groq LLaMA 3.1           |
-                                                              | AI Intelligence Report   |
-                                                              +--------------------------+
-```
-
 A visual version of the pipeline architecture:
 
 ![Architecture](docs/architecture.png)
