@@ -19,3 +19,6 @@ This separates imperative E+L (Python) from declarative T (dbt) — the defining
 
 The AI summary now reads from mart_city_daily_summary — a tested, documented dbt mart — instead of ad-hoc raw SQL. This means the AI's input is validated by dbt tests every run:
 if temperature is out of range or a city+date duplicates, the pipeline fails before the AI sees bad data. The exposure in dbt documents this dependency in the lineage graph.
+
+dbt is now baked into a custom Airflow image via a Dockerfile (build: . in docker-compose).
+The venv at /opt/airflow/dbt_venv persists across restarts. To rebuild after Dockerfile changes: docker compose build. No more manual venv installs.

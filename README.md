@@ -9,6 +9,7 @@
 ![Snowflake](https://img.shields.io/badge/Snowflake-Standard-29B5E8)
 ![Airflow](https://img.shields.io/badge/Apache%20Airflow-Docker-017CEE)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED)
+![dbt](https://img.shields.io/badge/dbt-Core-FF694B)
 ![Groq](https://img.shields.io/badge/Groq-LLaMA%203.1-orange)
 ![SQL](https://img.shields.io/badge/SQL-Snowflake-red)
 ![License](https://img.shields.io/badge/License-MIT-green)
@@ -168,6 +169,45 @@ conformed star schema.
 - An Airflow **Pool** that throttles concurrent API calls to protect the source
 - Credentials stored in Airflow Connections and a mounted `.env` -- never hardcoded in DAGs
 - Runs under a least-privilege **`PIPELINE_ROLE`**, not an admin role
+
+---
+
+## Transformation (dbt)
+
+The transformation layer is built with dbt Core, following the modern ELT pattern —
+Python extracts and loads raw data, dbt transforms it inside Snowflake using tested,
+version-controlled SQL models.
+
+### Data Lineage
+
+![dbt lineage](docs/dbt_lineage.png)
+
+### Model layers
+
+| Layer | Models | Materialization |
+|---|---|---|
+| Staging | stg_weather, stg_air_quality | view |
+| Intermediate | int_daily_weather | view |
+| Marts | dim_city, fct_weather_readings, fct_air_quality_readings, mart_city_daily_summary | table / incremental |
+
+### Key features
+
+- **Staging layer** deduplicates and cleans raw data (row_number over city + timestamp)
+- **Incremental models** with merge strategy for idempotent fact loads
+- **Snapshots** implement SCD Type 2 automatically for the city dimension
+- **Data tests** — built-in (unique, not_null, relationships) plus dbt_expectations
+  (range and row-count assertions)
+- **Source freshness** monitoring to detect stalled pipelines
+- **Documentation & lineage** — auto-generated catalogue with a full DAG from source to AI report
+- **Exposures** document the AI report as a downstream consumer
+
+### dbt + Airflow
+
+dbt runs in an isolated virtualenv inside a custom Airflow Docker image, keeping its
+dependencies separate from Airflow's. The ingestion DAG triggers the dbt DAG via
+TriggerDagRunOperator, so the full ELT flow is orchestrated end to end.
+
+---
 
 ### Snowflake-native scheduling
 
