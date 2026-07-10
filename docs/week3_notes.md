@@ -22,3 +22,15 @@ if temperature is out of range or a city+date duplicates, the pipeline fails bef
 
 dbt is now baked into a custom Airflow image via a Dockerfile (build: . in docker-compose).
 The venv at /opt/airflow/dbt_venv persists across restarts. To rebuild after Dockerfile changes: docker compose build. No more manual venv installs.
+
+Incremental --full-refresh gotcha — stale incremental data kept duplicates even after fixing staging; needed a full refresh to clear it
+
+Alias-qualify macros — generate_surrogate_key needs 'w.city_name' not bare 'city_name' when CTEs are joined
+
+Isolated venv rationale — adding dbt to Airflow's env caused a dependency-backtracking nightmare; isolation solved it
+
+Forward-slash path fix — Windows backslash paths in profiles.yml triggered \U escape errors; use forward slashes
+
+DBT_DEV schema — dbt models land in their own schema, separate from hand-built MARTS
+
+Dockerfile persists dbt — baking the venv into a custom image means no more manual reinstall after docker compose down

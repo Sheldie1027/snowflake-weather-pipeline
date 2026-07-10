@@ -236,3 +236,5 @@ airflow-project/
 dbt/weather_dbt/target/
 dbt/weather_dbt/dbt_packages/
 dbt/weather_dbt/logs/
+
+Weekly_Review/
