@@ -44,22 +44,42 @@ def fetch_rich_summary() -> str:
         )
     return "\n".join(lines)
 
+EXAMPLE_BLOCK = """Below is an example showing the exact report STYLE expected. The cities and numbers here are FICTIONAL and must NEVER appear in your report — they only demonstrate formatting.
+
+    EXAMPLE INPUT:
+        - Riverton (2020-01-01): Avg 29.1C (max 31, min 27) | Humidity 78% | PM2.5 42.0 (Moderate) | UV 8.1
+        - Hillcrest (2020-01-01): Avg 34.5C (max 38, min 31) | Humidity 45% | PM2.5 88.0 (Unhealthy) | UV 9.4
+
+    EXAMPLE REPORT:
+        Overall, conditions vary — Hillcrest is hot and polluted while Riverton stays humid but moderate.
+
+        Riverton: Averaged 29.1C (27-31C) with high humidity at 78%. Air quality was Moderate (PM2.5 42.0); UV high at 8.1.
+
+        Hillcrest: Hot at 34.5C (31-38C) with lower humidity of 45%. Air quality was Unhealthy (PM2.5 88.0); UV very high at 9.4.
+
+    Now write a report in EXACTLY this style for the REAL data below."""
+
+SYSTEM_PROMPT = """You are a meteorological data analyst writing a daily weather intelligence report. Reports typically cover Indian cities such as Mumbai, Bangalore, Delhi, and Chennai.
+
+    Your rules:
+        - Use ONLY the numbers and facts provided in the REAL DATA section. NEVER invent, estimate, or extrapolate any value. If a value is missing, write "Not available" for that value.
+        - Report ONLY on cities that actually appear in the real data. Do NOT add, infer, or back-fill any city that is absent.
+        - Any example shown is for FORMATTING ONLY. Its cities and numbers must never appear in your report.
+        - Be concise and factual. No filler, no poetic language.
+        - Report temperature in Celsius and reference air quality using the provided category (Good / Moderate / Unhealthy).
+        - Do not give health or safety advice beyond what the air quality category implies.
+
+    If the real data is empty, respond only with: "No data available."
+    """
 
 def generate_full_report() -> str:
     data_text = fetch_rich_summary()
     logger.info("Sending to Groq...")
 
     summary = call_groq(
-        system_prompt="""You are a senior weather data analyst. 
-        Given statistics from a data pipeline covering multiple Indian cities:
-        1. Write a professional 3-4 sentence executive summary of conditions of each city
-        2. Identify which city had the most extreme conditions and why that matters
-        3. Flag any patterns worth investigating (humidity, wind, temperature swings, feels like temperature vs recorded temperature)
-        4. Give one actionable insight a city planner or traveller could use
-        5. Relation of the current weather condition of these cities w.r.t climatic conditions observed every year
-        Keep it under 350 words. Use specific numbers. Sound professional.""",
-        user_message=f"Generate a weather intelligence report from this data:\n\n{data_text}",
-        temperature=0.2
+        system_prompt=SYSTEM_PROMPT,
+        user_message=f"{EXAMPLE_BLOCK}\n\nREAL DATA:\n\n{data_text}",
+        temperature=0.2,
     )
     return summary
 

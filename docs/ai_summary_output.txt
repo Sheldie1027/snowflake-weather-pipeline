@@ -1,24 +1,7 @@
-**Executive Summary (July 10, 2026)**
+Overall, conditions vary sharply — Delhi is hot and polluted while Bangalore stays relatively cool and clean.
 
-Bangalore is experiencing a relatively stable temperature range (23.71C - 29.6C) with moderate humidity (78.5%). Delhi is facing extreme heat with a high average temperature (28.72C) and high humidity (80.0%). Mumbai's temperature is also high (28.14C) with very high humidity (82.79%). These conditions are expected to continue in the coming days.
+Bangalore: Averaged 23.71C (21-29.6C) with high humidity at 78.5%. Air quality was Good (PM2.5 8.31); UV low at 1.93.
 
-**Most Extreme Conditions: Delhi**
+Delhi: Averaged 28.72C (25.3-32.8C) with high humidity of 80.0%. Air quality was Unhealthy (PM2.5 95.05); UV low at 1.68.
 
-Delhi is experiencing the most extreme conditions due to its high average temperature (28.72C) and high humidity (80.0%). The city's temperature has been consistently above 27C for the past week, with a maximum temperature of 32.8C on July 10. This heat wave is likely to continue, posing a significant risk to public health.
-
-**Patterns Worth Investigating**
-
-1. **Temperature Swings**: Bangalore's temperature is fluctuating between 23.71C and 29.6C, indicating a moderate temperature swing. Delhi's temperature is also fluctuating, but with a larger swing (27.06C - 32.8C). Mumbai's temperature is relatively stable.
-2. **Humidity**: All three cities are experiencing high humidity, with Delhi and Mumbai having the highest values (80.0% and 82.79%, respectively).
-3. **Feels Like Temperature vs Recorded Temperature**: The feels-like temperature (FELT) is not provided in the data, but based on the average temperature and humidity, it is likely that the FELT is higher than the recorded temperature, especially in Delhi and Mumbai.
-
-**Actionable Insight**
-
-City planners and travelers can use the following actionable insight:
-
-* Plan outdoor activities in Bangalore during the cooler morning hours (6:00 AM - 9:00 AM) when the temperature is relatively stable (23.71C - 25C).
-* Avoid outdoor activities in Delhi and Mumbai during the peak sun hours (11:00 AM - 3:00 PM) when the temperature is highest and humidity is highest.
-
-**Relation to Climatic Conditions**
-
-The current weather conditions in Bangalore, Delhi, and Mumbai are consistent with the typical climatic conditions observed during the summer months in India. The heat wave in Delhi is likely to continue for the next few days, while Bangalore and Mumbai are expected to experience a moderate temperature range with high humidity.
+Mumbai: Averaged 28.14C (26.7-29.9C) with very high humidity at 82.79%. Air quality was Good (PM2.5 15.5); UV low at 1.97.
