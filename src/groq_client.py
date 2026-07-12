@@ -11,7 +11,7 @@ client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 MODEL = os.getenv("GROQ_MODEL")
 
 
-def call_groq(system_prompt: str, user_message: str, temperature: float = 0.5) -> str:
+def call_groq(system_prompt: str, user_message: str, temperature: float = 0.3, max_tokens: int = 1000) -> str:
     try:
         response = client.chat.completions.create(
             model = MODEL,
@@ -20,7 +20,7 @@ def call_groq(system_prompt: str, user_message: str, temperature: float = 0.5) -
                 {"role": "user", "content": user_message}
             ],
             temperature= temperature,
-            max_tokens=1000
+            max_tokens=max_tokens
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
