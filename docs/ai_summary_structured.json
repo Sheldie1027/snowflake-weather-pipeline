@@ -4,23 +4,23 @@
     {
       "city": "Bangalore",
       "avg_temp": 23.71,
-      "avg_PM25": 8.31,
       "air_quality": "Good",
+      "avg_pm25": 8.31,
       "comment": "Cooler at 23.71C with good air quality."
     },
     {
       "city": "Delhi",
       "avg_temp": 28.72,
-      "avg_PM25": 95.05,
       "air_quality": "Unhealthy",
+      "avg_pm25": 95.05,
       "comment": "Hot at 28.72C with unhealthy air quality."
     },
     {
       "city": "Mumbai",
       "avg_temp": 28.14,
-      "avg_PM25": 15.5,
       "air_quality": "Good",
-      "comment": "Moderate at 28.14C with good air quality."
+      "avg_pm25": 15.5,
+      "comment": "Mild at 28.14C with good air quality."
     }
   ],
   "alerts": [

@@ -1,16 +1,30 @@
 import os
 import logging
 from dotenv import load_dotenv
-from groq import Groq
-
+from groq import Groq,RateLimitError, InternalServerError, APIConnectionError
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_exponential,
+    retry_if_exception_type,
+    before_sleep_log,
+)
 
 load_dotenv("config/.env")
 logger = logging.getLogger(__name__)
 
+RETRYABLE = (RateLimitError, InternalServerError, APIConnectionError)
+
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 MODEL = os.getenv("GROQ_MODEL")
 
-
+@retry(
+    retry=retry_if_exception_type(RETRYABLE),
+    stop=stop_after_attempt(4),
+    wait=wait_exponential(multiplier=1, min=1, max=20),
+    before_sleep=before_sleep_log(logger, logging.WARNING),
+    reraise=True,
+)
 def call_groq(system_prompt: str, user_message: str, temperature: float = 0.3, max_tokens: int = 1000) -> str:
     try:
         response = client.chat.completions.create(

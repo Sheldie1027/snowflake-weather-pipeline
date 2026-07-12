@@ -1,9 +1,10 @@
 import json
 import re
 import logging
+import time
 from datetime import datetime, timezone
 from snowflake_client import run_query_df
-from groq_client import call_groq
+from llm_provider import get_provider
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -68,12 +69,17 @@ JSON_EXAMPLE_BLOCK = """Below is an example showing the exact JSON shape expecte
         - Hillcrest (2020-01-01): Avg 34.5C (max 38, min 31) | Humidity 45% | PM2.5 88.0 (Unhealthy) | UV 9.4
 
     EXAMPLE OUTPUT:
-        {"overview": "Conditions vary, with Hillcrest hot and polluted while Riverton stays humid but moderate.", "cities": [{"city": "Riverton", "avg_temp": 29.1, "air_quality": "Moderate", "comment": "Humid at 78% with moderate air quality."}, {"city": "Hillcrest", "avg_temp": 34.5, "air_quality": "Unhealthy", "comment": "Hot at 34.5C with unhealthy air quality."}], "alerts": ["Hillcrest air quality is Unhealthy (PM2.5 88.0)."]}
+        {"overview": "Conditions vary, with Hillcrest hot and polluted while Riverton stays humid but moderate.", "cities": [{"city": "Riverton", "avg_temp": 29.1, "air_quality": "Moderate", "avg_pm25": 42.0, "comment": "Humid at 78% with moderate air quality."}, {"city": "Hillcrest", "avg_temp": 34.5, "air_quality": "Unhealthy", "avg_pm25": 88.0, "comment": "Hot at 34.5C with unhealthy air quality."}], "alerts": ["Hillcrest air quality is Unhealthy (PM2.5 88.0)."]}
 
     Now produce JSON in EXACTLY this shape for the REAL data below. Output ONLY the JSON object.
 """
 
 EXPECTED_KEYS = {"overview", "cities", "alerts"}
+
+MAX_DATA_TOKENS = 2000
+
+def estimate_tokens(text: str) -> int:
+    return len(text) // 4
 
 def fetch_rich_summary() -> str:
     query = """
@@ -105,29 +111,36 @@ def fetch_rich_summary() -> str:
             f"PM2.5 {row['AVG_PM25']} ({row['AIR_QUALITY_CATEGORY']}) | "
             f"UV {row['AVG_UV']}"
         )
-    return "\n".join(lines)
+    result =  "\n".join(lines)
+    
+    est = estimate_tokens(result)
+    if est > MAX_DATA_TOKENS:
+        logger.warning(
+            "Data block is large (~%d tokens); truncating to protect the context window.", est
+        )
+        keep = MAX_DATA_TOKENS * 4
+        result = result[:keep]
+
+    logger.info("Data block: %d chars (~%d tokens)", len(result), est)
+    return result
 
 def generate_full_report() -> str:
     data_text = fetch_rich_summary()
-    logger.info("Sending to Groq...")
-
-    summary = call_groq(
+    return _call_with_observability(
+        label="prose_report",
         system_prompt=SYSTEM_PROMPT,
         user_message=f"{EXAMPLE_BLOCK}\n\nREAL DATA:\n\n{data_text}",
-        temperature=0.2,
+        temperature=0,
     )
-    return summary
 
 def generate_structured_report() -> str:
     data_text = fetch_rich_summary()
-    logger.info("\nRequesting structured JSON report from Groq...")
-
-    raw = call_groq(
-        system_prompt=JSON_SYSTEM_PROMPT,
+    return _call_with_observability(
+        label="structured_report",
+        system_prompt=JSON_SYSTEM_PROMPT, 
         user_message=f"{JSON_EXAMPLE_BLOCK}\n\nREAL DATA:\n\n{data_text}",
-        temperature=0.1,
+        temperature=0,
     )
-    return raw
 
 def _strip_json_fences(text: str) -> str:
     text = text.strip()
@@ -181,7 +194,7 @@ def validate_structured_report(data: dict) -> tuple[bool, list[str]]:
             if not isinstance(city, dict):
                 problems.append(f"cities[{i}] is not an object")
                 continue
-            for key in ("city", "avg_temp", "air_quality", "comment"):
+            for key in ("city", "avg_temp", "air_quality", "avg_pm25", "comment"):
                 if key not in city:
                     problems.append(f"cities[{i}] missing '{key}'")
 
@@ -212,6 +225,36 @@ def render_report(data: dict) -> str:
             lines.append(f"  ! {a}")
 
     return "\n".join(lines)
+
+def _call_with_observability(label: str, system_prompt: str, user_message: str, temperature: float) -> str:
+    provider = get_provider()
+    est_in = estimate_tokens(system_prompt + user_message)
+    start = time.monotonic()
+
+    try:
+        out = provider.generate(
+            system_prompt=system_prompt,
+            user_message=user_message,
+            temperature=temperature,
+        )
+    except Exception as e:
+        elapsed = time.monotonic() - start
+        logger.error(
+            "LLM call FAILED | provider=%s | label=%s | est_input_tokens=%d | elapsed=%.2fs | error=%s: %s",
+            provider.name, label, est_in, elapsed, type(e).__name__, e,
+        )
+        raise
+
+    elapsed = time.monotonic() - start
+    logger.info(
+        "LLM call OK | provider=%s | label=%s | est_input_tokens=%d | output_chars=%d | elapsed=%.2fs",
+        provider.name, label, est_in, len(out), elapsed,
+    )
+
+    if not out or not out.strip():
+        logger.warning("LLM returned an empty response | provider=%s label=%s", provider.name, label)
+
+    return out
 
 if __name__ == "__main__":
 
