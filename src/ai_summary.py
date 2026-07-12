@@ -53,7 +53,7 @@ JSON_SYSTEM_PROMPT = """You are a meteorological data analyst. You output ONLY v
                 {
                     "city": "city name",
                     "avg_temp": 29.1,
-                    "avg_PM25":95.09,
+                    "avg_pm25": 42.0,
                     "air_quality": "Good | Moderate | Unhealthy | Not available",
                     "comment": "one short factual sentence"
                 }
@@ -211,9 +211,11 @@ def render_report(data: dict) -> str:
     for city in data.get("cities", []):
         temp = city.get("avg_temp")
         temp_str = f"{temp}C" if temp is not None else "Not available"
+        pm25 = city.get("avg_pm25")
+        pm_str = f"{pm25}" if pm25 is not None else "Not available"
         lines.append(
             f"{city.get('city', 'Unknown')}: "
-            f"Avg {temp_str} | Air quality: {city.get('air_quality', 'Not available')}"
+            f"Avg {temp_str} | PM2.5 {pm_str} | Air quality: {city.get('air_quality', 'Not available')}"
         )
         lines.append(f"  {city.get('comment', '')}")
         lines.append("")
