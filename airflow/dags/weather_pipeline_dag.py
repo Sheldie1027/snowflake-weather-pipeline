@@ -1,20 +1,24 @@
+import logging 
+import sys
 from airflow.decorators import dag, task
 from airflow.providers.http.sensors.http import HttpSensor
 from airflow.models import Variable
 from airflow.models.baseoperator import chain
 from datetime import datetime, timezone, timedelta
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
-import logging 
-import sys
+from alerts import alert_on_failure
+
 
 sys.path.insert(0, "/opt/airflow/pipeline_src")
 
 logger = logging.getLogger(__name__)
 
 default_args = {
-    "retries" : 2
+    "owner": "Sheldon"
+    ,"retries" : 2
     ,"retry_delay" : timedelta(minutes=2)
     ,"retry_exponential_backoff" : True
+    ,"on_failure_callback" : alert_on_failure
 }
 
 @dag(

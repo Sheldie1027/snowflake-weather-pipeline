@@ -1,14 +1,17 @@
 from airflow.decorators import dag
 from airflow.operators.bash import BashOperator
 from datetime import datetime, timezone, timedelta
+from alerts import alert_on_dbt_failure
 
 DBT_PROJECT_DIR = "/opt/airflow/dbt/weather_dbt"
 DBT_PROFILES_DIR = "/opt/airflow/.dbt"
 DBT_BIN = "/opt/airflow/dbt_venv/bin/dbt"
 
 default_args = {
-    "retries": 1,
-    "retry_delay": timedelta(minutes=2),
+    "owner" : "Sheldon"
+    ,"retries": 1
+    ,"retry_delay": timedelta(minutes=2)
+    ,"on_failure_callback" : alert_on_dbt_failure
 }
 
 
@@ -44,7 +47,18 @@ def dbt_transform():
         ),
     )
 
-    dbt_run >> dbt_test
+    dbt_freshness = BashOperator(
+        task_id="dbt_source_freshness",
+        bash_command=" ".join([
+            "DBT_PRIVATE_KEY_PATH=/opt/airflow/config/rsa_key.pem",
+            DBT_BIN, "source", "freshness",
+            "--project-dir", DBT_PROJECT_DIR,
+            "--profiles-dir", DBT_PROFILES_DIR,
+            "--target", "prod",
+        ]),
+    )
+
+    dbt_freshness >> dbt_run >> dbt_test
 
 
 dbt_transform()
