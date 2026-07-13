@@ -2,6 +2,10 @@ with source as (
 
     select * from {{ source('raw', 'raw_weather_api') }}
 
+    {% if target.name == 'dev' %}
+    where recorded_at >= dateadd('day', -30, current_date())
+    {% endif %}
+
 ),
 
 deduplicated as (
