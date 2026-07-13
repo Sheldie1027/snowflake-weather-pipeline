@@ -28,7 +28,8 @@ def dbt_transform():
             f"DBT_PRIVATE_KEY_PATH=/opt/airflow/config/rsa_key.pem "
             f"{DBT_BIN} run "
             f"--project-dir {DBT_PROJECT_DIR} "
-            f"--profiles-dir {DBT_PROFILES_DIR}"
+            f"--profiles-dir {DBT_PROFILES_DIR} "
+            f"--target prod"
         ),
     )
 
@@ -38,7 +39,8 @@ def dbt_transform():
             f"DBT_PRIVATE_KEY_PATH=/opt/airflow/config/rsa_key.pem "
             f"{DBT_BIN} test "
             f"--project-dir {DBT_PROJECT_DIR} "
-            f"--profiles-dir {DBT_PROFILES_DIR}"
+            f"--profiles-dir {DBT_PROFILES_DIR} "
+            f"--target prod"
         ),
     )
 

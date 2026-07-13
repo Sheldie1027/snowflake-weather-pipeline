@@ -2,6 +2,7 @@ import json
 import re
 import logging
 import time
+import os
 from datetime import datetime, timezone
 from snowflake_client import run_query_df
 from llm_provider import get_provider
@@ -78,11 +79,13 @@ EXPECTED_KEYS = {"overview", "cities", "alerts"}
 
 MAX_DATA_TOKENS = 2000
 
+DBT_SCHEMA = os.getenv("DBT_SCHEMA", "DBT_PROD")
+
 def estimate_tokens(text: str) -> int:
     return len(text) // 4
 
 def fetch_rich_summary() -> str:
-    query = """
+    query = f"""
         SELECT
             city_name,
             reading_date,
@@ -93,7 +96,7 @@ def fetch_rich_summary() -> str:
             avg_pm25,
             avg_uv,
             air_quality_category
-        FROM WEATHER_DB.DBT_DEV.MART_CITY_DAILY_SUMMARY
+        FROM WEATHER_DB.{DBT_SCHEMA}.MART_CITY_DAILY_SUMMARY
         QUALIFY row_number() OVER (PARTITION BY city_name ORDER BY reading_date DESC) = 1
         ORDER BY city_name
     """
