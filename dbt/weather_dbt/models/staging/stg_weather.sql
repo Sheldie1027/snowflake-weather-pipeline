@@ -23,6 +23,7 @@ cleaned as (
         city as city_name,
         country,
         latitude,
+        this_column_does_not_exist,
         longitude,
         recorded_at,
         temperature_c,
