@@ -31,13 +31,14 @@ daily as (
         round(avg(aq.pm2_5), 2) as avg_pm25,
         round(avg(aq.uv_index), 2) as avg_uv,
         count(distinct w.reading_sk) as weather_reading_cnt
-    from weather w
-    join city c
+    from weather as w
+    inner join city as c
         on w.city_sk = c.city_sk
-    left join air_quality aq
-        on w.city_sk = aq.city_sk
-        and w.reading_date = aq.reading_date
-        and hour(w.recorded_at) = hour(aq.recorded_at)
+    left join air_quality as aq
+        on
+            w.city_sk = aq.city_sk
+            and w.reading_date = aq.reading_date
+            and hour(w.recorded_at) = hour(aq.recorded_at)
     group by c.city_name, w.reading_date
 
 ),

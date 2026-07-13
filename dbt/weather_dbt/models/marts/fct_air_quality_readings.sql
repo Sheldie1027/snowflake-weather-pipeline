@@ -21,8 +21,8 @@ final as (
         aq.uv_index,
         aq.carbon_monoxide,
         aq.pipeline_run_id
-    from air_quality aq
-    join city c on aq.city_name = c.city_name
+    from air_quality as aq
+    inner join city as c on aq.city_name = c.city_name
 
 )
 

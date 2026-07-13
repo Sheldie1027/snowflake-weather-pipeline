@@ -1,0 +1,15 @@
+[sqlfluff]
+templater = dbt
+dialect = snowflake
+max_line_length = 120
+exclude_rules = L034, L044
+
+[sqlfluff:templater:dbt]
+project_dir = dbt/weather_dbt
+profiles_dir = C:/Users/sheld/.dbt
+
+[sqlfluff:rules:capitalisation.keywords]
+capitalisation_policy = lower
+
+[sqlfluff:templater:jinja]
+apply_dbt_builtins = true
