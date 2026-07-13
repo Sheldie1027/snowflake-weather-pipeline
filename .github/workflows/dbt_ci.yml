@@ -65,4 +65,4 @@ jobs:
       - name: Install SQLFluff
         run: pip install sqlfluff
       - name: Lint models
-        run: sqlfluff lint dbt/weather_dbt/models --dialect snowflake
+        run: sqlfluff lint dbt/weather_dbt/models --dialect snowflake --templater jinja
