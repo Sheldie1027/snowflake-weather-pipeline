@@ -31,14 +31,13 @@ final as (
         w.windspeed_kmh,
         w.weather_code,
         w.pipeline_run_id
-    from weather w
-    join city c on w.city_name = c.city_name
+    from weather as w
+    inner join city as c on w.city_name = c.city_name
 
     {% if is_incremental() %}
-        -- only process rows newer than what's already loaded
-        where w.recorded_at > (select max(recorded_at) from {{ this }})
+        where w.recorded_at > (select max(recorded_at) from {{ this }})  -- noqa: RF02
     {% endif %}
 
 )
 
-select * from final 
+select * from final

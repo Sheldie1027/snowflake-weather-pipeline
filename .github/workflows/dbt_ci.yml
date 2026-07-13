@@ -53,3 +53,16 @@ jobs:
       - name: Build and test all models
         working-directory: dbt/weather_dbt
         run: dbt build --profiles-dir . --profile weather_dbt --target ci
+  
+  sql-lint:
+    name: Lint SQL
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install SQLFluff
+        run: pip install sqlfluff
+      - name: Lint models
+        run: sqlfluff lint dbt/weather_dbt/models --dialect snowflake

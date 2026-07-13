@@ -3,8 +3,10 @@
 ![Snowflake](https://img.shields.io/badge/Snowflake-Data%20Warehouse-29B5E8)
 ![Airflow](https://img.shields.io/badge/Apache%20Airflow-Orchestration-017CEE)
 ![dbt](https://img.shields.io/badge/dbt-Core-FF694B)
+![dbt CI](https://github.com/Sheldie1027/snowflake-weather-pipeline/actions/workflows/dbt_ci.yml/badge.svg)
 ![Python](https://img.shields.io/badge/Python-ETL-3776AB)
 ![License](https://img.shields.io/badge/License-MIT-green)
+
 
 An end-to-end, production-shaped **ELT + AI pipeline** that ingests weather and
 air quality data for four Indian cities, transforms it inside Snowflake with dbt,
