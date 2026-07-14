@@ -35,49 +35,83 @@ alerting, and LLM integration — at zero infrastructure cost.
 ## Architecture
 
 ```
-+---------------------------------------------------------------+
-|                    Apache Airflow (Docker)                    |
-|    weather_pipeline_dag  --triggers-->  dbt_transform_dag     |
-|              (failure callbacks -> email alerts)              |
-+----------------------------+----------------------------------+
-                             |
-         +-------------------+-------------------+
-         v                                       v
-+------------------+                    +------------------+
-| Open-Meteo       |                    | Open-Meteo       |
-| Weather API      |                    | Air Quality API  |
-+--------+---------+                    +--------+---------+
-         |                                       |
-         +-------------------+-------------------+
-                             v
-              +-----------------------------+
-              |  Python  (extract + load)   |   E + L
-              +--------------+--------------+
-                             v
-              +-----------------------------+
-              |  Snowflake RAW  (BRONZE)    |
-              +--------------+--------------+
-                             v
-              +-----------------------------------------+
-              |  dbt  (isolated venv in Airflow image)  |   T
-              |   staging + intermediate  -> SILVER     |
-              |   marts                   -> GOLD       |
-              |   + tests + snapshots + freshness       |
-              +--------------+--------------------------+
-                             v
-              +-----------------------------+
-              |  mart_city_daily_summary    |
-              +--------------+--------------+
-                             v
-              +-----------------------------+
-              |  LLM  -  AI Report          |
-              |  (Groq; provider-agnostic)  |
-              +-----------------------------+
-
-   CI: every pull request runs dbt build against an isolated DBT_CI schema
+                      ┌─────────────────────┐  ┌─────────────────────┐
+                      │  Open-Meteo         │  │  Open-Meteo         │
+                      │  Weather API        │  │  Air Quality API    │
+                      └──────────┬──────────┘  └──────────┬──────────┘
+                                 └────────────┬───────────┘
+                                              │
+┌──── CI / CD ──────────────┐    ┌────────────▼────────────────────────────────┐
+│                           │    │          APACHE AIRFLOW  (Docker)           │
+│  GitHub Actions           │    │                                             │
+│  ┌─────────────────────┐  │    │  ┌──────────────────────┐                   │
+│  │ on every PR:        │  │    │  │ weather_pipeline_dag │                   │
+│  │   dbt build         │  │    │  │  extract → load →    │                   │
+│  │   dbt test          │  │    │  │  AI summary          │                   │
+│  └──────────┬──────────┘  │    │  └──────────┬───────────┘                   │
+│             │             │    │             │ TriggerDagRunOperator         │
+│  main protected by        │    │  ┌──────────▼───────────┐                   │
+│  required status check    │    │  │ dbt_transform_dag    │                   │
+│             │             │    │  │  freshness → run →   │                   │
+└─────────────┼─────────────┘    │  │  test                │                   │
+              │                  │  └──────────┬───────────┘                   │
+              │                  └─────────────┼───────────────────────────────┘
+              │                                │                        ╎
+              │                                │ E + L                  ╎ on_failure
+              │                                │ (Python)               ╎ _callback
+              │                                │                        ▼
+              │                                │                 ┌──────────────┐
+              │                                │                 │ Email alerts │
+              │                                │                 │ (names the   │
+              │                                │                 │ failed test) │
+              │                                │                 └──────────────┘
+┌─────────────┼────────────────────────────────┼─────────────────────────────────┐
+│             │       SNOWFLAKE  ·  WEATHER_DB │                                 │
+│             │                                ▼                                 │
+│             │              ╔═════════════════════════════════╗                 │
+│             │              ║  RAW                    BRONZE  ║                 │
+│             │              ║  raw_weather_api                ║                 │
+│             │              ║  raw_air_quality                ║                 │
+│             │              ╚════════════════┬════════════════╝                 │
+│             │                               │                                  │
+│             │                               │ T  (dbt)                         │
+│             │                               ▼                                  │
+│             │              ╔═════════════════════════════════╗                 │
+│             │              ║  DBT_PROD  (views)      SILVER  ║                 │
+│             │              ║  stg_weather, stg_air_quality   ║                 │
+│             │              ║  int_daily_weather              ║                 │
+│             │              ╚════════════════┬════════════════╝                 │
+│             │                               │                                  │
+│             │                               ▼                                  │
+│             │              ╔═════════════════════════════════╗                 │
+│             │              ║  DBT_PROD  (tables)       GOLD  ║                 │
+│             │              ║  dim_city                       ║                 │
+│             │              ║  fct_weather_readings           ║                 │
+│             │              ║  fct_air_quality_readings       ║                 │
+│             │              ║  mart_city_daily_summary        ║                 │
+│             │              ╚════════════════┬════════════════╝                 │
+│             ▼                               │                                  │
+│   ┌───────────────────┐                     │                                  │
+│   │ DBT_CI            │                     │                                  │
+│   │ DBT_DEV           │                     │                                  │
+│   │                   │                     │                                  │
+│   │ same models,      │                     │                                  │
+│   │ isolated schemas  │                     │                                  │
+│   └───────────────────┘                     │                                  │
+└─────────────────────────────────────────────┼──────────────────────────────────┘
+                                              │
+                                              ▼
+                                ┌─────────────────────────────┐
+                                │   AI INTELLIGENCE REPORT    │
+                                │   Groq · provider-agnostic  │
+                                │   prose + structured JSON   │
+                                └─────────────────────────────┘
 ```
 
-![Architecture](docs/architecture.png)
+**Reading the diagram:** Python performs **E**xtract and **L**oad into RAW (Bronze);
+dbt performs the **T**ransform in-warehouse, refining Bronze → Silver → Gold. CI and
+alerting sit outside the data path — they are cross-cutting concerns, not pipeline
+stages. `DBT_CI` and `DBT_DEV` hold the same models in isolated schemas.
 
 ---
 
