@@ -3,16 +3,10 @@ import pandas as pd
 import logging
 from datetime import datetime, timezone
 from tenacity import retry, stop_after_attempt, wait_exponential
+from cities import CITIES
 
 logging.basicConfig(level = logging.INFO, format = "%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
-
-CITIES = [
-    {"name": "Mumbai",    "country": "India", "lat": 19.07, "lon": 72.88},
-    {"name": "Bangalore", "country": "India", "lat": 12.97, "lon": 77.59},
-    {"name": "Delhi",     "country": "India", "lat": 28.70, "lon": 77.10},
-    {"name": "Chennai",   "country": "India", "lat": 13.08, "lon": 80.27},
-]
 
 BASE_URL = "https://air-quality-api.open-meteo.com/v1/air-quality"
 

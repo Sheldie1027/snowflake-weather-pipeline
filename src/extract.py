@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 import logging
 from datetime import datetime
+from cities import CITIES
 
 logging.basicConfig(
     level=logging.INFO,
@@ -9,13 +10,8 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-CITIES = [
-    {"name": "Mumbai",    "country": "India", "lat": 19.07, "lon": 72.88},
-    {"name": "Bangalore", "country": "India", "lat": 12.97, "lon": 77.59},
-    {"name": "Delhi",     "country": "India", "lat": 28.70, "lon": 77.10},
-]
-
 BASE_URL = "https://api.open-meteo.com/v1/forecast"
+ARCHIVE_URL = "https://archive-api.open-meteo.com/v1/archive"
 
 PARAMS = {
     "hourly": "temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code",
@@ -25,14 +21,27 @@ PARAMS = {
 }
 
 
-def fetch_weather_for_city (city: dict) -> pd.DataFrame:
-    logger.info(f"Fetching weather data for {city['name']}...")
+def fetch_weather_for_city(city: dict, start_date: str = None, end_date: str = None) -> pd.DataFrame:
 
-    params = {
-        **PARAMS,
-        "latitude": city['lat'],
-        "longitude": city['lon']
-    }
+    if start_date and end_date:
+        logger.info(f"Backfilling {city['name']} from {start_date} to {end_date}...")
+        url = ARCHIVE_URL
+        params = {
+            "hourly": PARAMS["hourly"],
+            "timezone": PARAMS["timezone"],
+            "latitude": city["lat"],
+            "longitude": city["lon"],
+            "start_date": start_date,
+            "end_date": end_date,
+        }
+    else:
+        logger.info(f"Fetching weather data for {city['name']}...")
+        url = BASE_URL
+        params = {
+            **PARAMS,
+            "latitude": city["lat"],
+            "longitude": city["lon"],
+        }
 
     try:
         response = requests.get(BASE_URL, params=params , timeout = 30)
@@ -74,12 +83,11 @@ def fetch_weather_for_city (city: dict) -> pd.DataFrame:
     return df
 
 
-def extract_all_cities() -> pd.DataFrame:
-
+def extract_all_cities(start_date: str = None, end_date: str = None) -> pd.DataFrame:
     all_dfs = []
 
     for city in CITIES:
-        df = fetch_weather_for_city(city)
+        df = fetch_weather_for_city(city, start_date, end_date)
         if not df.empty:
             all_dfs.append(df)
         

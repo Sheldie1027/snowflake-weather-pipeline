@@ -1,17 +1,21 @@
+import logging
+import sys
 from airflow.decorators import dag, task
 from airflow.providers.http.sensors.http import HttpSensor
 from datetime import datetime, timezone, timedelta
 from airflow.models.baseoperator import chain
-import logging
-import sys
+from alerts import alert_on_failure
+
 
 sys.path.insert(0, "/opt/airflow/pipeline_src")
 
 logger = logging.getLogger(__name__)
 
 default_args = {
-    "retries" : 2
-    ,"retry_delay" : timedelta(minutes=2)
+    "owner": "Sheldon",
+    "retries": 2,
+    "retry_delay": timedelta(minutes=2),
+    "on_failure_callback": alert_on_failure,
 }
 
 @dag(
@@ -65,38 +69,8 @@ def air_quality_pipeline():
             raise RuntimeError("Failed to load Air quality data to RAW table")
         logger.info(f"loaded {nrows} rows to RAW_AIR_QUALITY table")
 
-    @task
-    def load_fact_air_quality(pipeline_run_id : str):
-        from snowflake_client import get_connection, run_query
-
-        conn = get_connection()
-        sql = f"""
-            INSERT INTO WEATHER_DB.MARTS.FACT_AIR_QUALITY_READINGS
-                (city_sk, date_sk, recorded_at, pm2_5, uv_index,
-                 carbon_monoxide, pipeline_run_id)
-            SELECT
-                c.city_sk,
-                TO_NUMBER(TO_VARCHAR(DATE(r.recorded_at), 'YYYYMMDD')) AS date_sk,
-                r.recorded_at,
-                r.pm2_5,
-                r.uv_index,
-                r.carbon_monoxide,
-                '{pipeline_run_id}' AS pipeline_run_id
-            FROM WEATHER_DB.RAW.RAW_AIR_QUALITY r
-            JOIN WEATHER_DB.MARTS.DIM_CITY c
-                ON r.city = c.city_nk AND c.is_current = TRUE
-            WHERE r.pipeline_run_id = '{pipeline_run_id}'
-        """
-
-        run_query(sql, conn)
-        conn.close()
-        logger.info("Loaded air quality data to fact table")
-
     run_id = get_run_id()
     raw = extract_air_quality()
-    load_raw_result = load_raw_air_quality(raw, run_id)
-    load_fact_result = load_fact_air_quality(run_id)
-
-    chain(load_raw_result,load_fact_result)
+    load_raw_air_quality(raw, run_id)
 
 air_quality_pipeline()
