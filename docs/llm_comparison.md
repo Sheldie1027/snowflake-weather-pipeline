@@ -1,0 +1,3 @@
+Decision: Groq (llama-3.1-8b-instant) in production.
+Groq is free, fast (sub-second on this payload), and — with an engineered prompt containing explicit anti-hallucination and anti-back-fill guards — produces faithful, correctly-structured reports. Claude produced same results as groq given the same system prompt and examples, but the Anthropic API is billed per-token and separate from a Pro chat subscription, so adopting it would introduce a running cost for a marginal gain on a task this constrained.
+The provider abstraction (llm_provider.py) means switching is a drop-in if requirements change — the report logic imports no vendor.

@@ -1,4 +1,6 @@
-Overall, conditions vary — Delhi is hot and polluted while Bangalore and Mumbai stay relatively cool and clean.
+=== PROSE REPORT ===
+
+Overall, conditions vary â€” Delhi is hot and polluted while Bangalore and Mumbai stay relatively cool and clean.
 
 Bangalore: Averaged 25.92C (20.2-32.3C) with moderate humidity at 64.21%. Air quality was Good (PM2.5 11.59); UV low at 2.37.
 
