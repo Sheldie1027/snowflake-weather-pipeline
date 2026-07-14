@@ -1,11 +1,14 @@
 # Weather Intelligence Pipeline
 
-![dbt CI](https://github.com/Sheldie1027/snowflake-weather-pipeline/actions/workflows/dbt_ci.yml/badge.svg)
-![Snowflake](https://img.shields.io/badge/Snowflake-Data%20Warehouse-29B5E8)
-![Airflow](https://img.shields.io/badge/Apache%20Airflow-Orchestration-017CEE)
-![dbt](https://img.shields.io/badge/dbt-Core-FF694B)
-![Docker](https://img.shields.io/badge/Docker-Containerised-2496ED)
-![Python](https://img.shields.io/badge/Python-3.11-3776AB)
+[![dbt CI](https://github.com/Sheldie1027/snowflake-weather-pipeline/actions/workflows/dbt_ci.yml/badge.svg)](https://github.com/Sheldie1027/snowflake-weather-pipeline/actions/workflows/dbt_ci.yml)
+![Snowflake](https://img.shields.io/badge/Snowflake-Data%20Warehouse-29B5E8?logo=snowflake&logoColor=white)
+![dbt](https://img.shields.io/badge/dbt-Core-FF694B?logo=dbt&logoColor=white)
+![Airflow](https://img.shields.io/badge/Apache%20Airflow-Orchestration-017CEE?logo=apacheairflow&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Containerised-2496ED?logo=docker&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-CI%2FCD-2088FF?logo=githubactions&logoColor=white)
+![Groq](https://img.shields.io/badge/Groq-LLaMA%203.1-F55036)
+![Architecture](https://img.shields.io/badge/Architecture-ELT%20%C2%B7%20Medallion-4B32C3)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 A production-shaped **ELT + AI pipeline** that ingests weather and air quality data
