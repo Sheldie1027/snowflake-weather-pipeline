@@ -1,29 +1,36 @@
 {
-  "overview": "Conditions vary, with Delhi hot and polluted while Bangalore stays cooler but moderate.",
+  "overview": "Conditions vary, with Delhi being hot and polluted while other cities stay relatively cool and have good air quality.",
   "cities": [
     {
       "city": "Bangalore",
-      "avg_temp": 25.92,
+      "avg_temp": 25.91,
       "air_quality": "Good",
-      "avg_pm25": 11.59,
-      "comment": "Cooler at 25.92C with good air quality."
+      "avg_pm25": 12.93,
+      "comment": "Cool at 25.91C with good air quality."
+    },
+    {
+      "city": "Chennai",
+      "avg_temp": 33.0,
+      "air_quality": "Good",
+      "avg_pm25": 23.3,
+      "comment": "Hot at 33.0C with good air quality."
     },
     {
       "city": "Delhi",
-      "avg_temp": 32.39,
+      "avg_temp": 31.8,
       "air_quality": "Unhealthy",
-      "avg_pm25": 147.2,
-      "comment": "Hot at 32.39C with unhealthy air quality."
+      "avg_pm25": 147.96,
+      "comment": "Hot at 31.8C with unhealthy air quality."
     },
     {
       "city": "Mumbai",
-      "avg_temp": 28.44,
+      "avg_temp": 28.32,
       "air_quality": "Good",
-      "avg_pm25": 14.35,
-      "comment": "Mild at 28.44C with good air quality."
+      "avg_pm25": 19.82,
+      "comment": "Mild at 28.32C with good air quality."
     }
   ],
   "alerts": [
-    "Delhi air quality is Unhealthy (PM2.5 147.2)."
+    "Delhi air quality is Unhealthy (PM2.5 147.96)."
   ]
 }

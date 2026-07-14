@@ -70,6 +70,9 @@ models:
           combination_of_columns:
             - city_name
             - reading_date
+      - dbt_expectations.expect_table_row_count_to_be_between:
+          min_value: 4
+          max_value: 100000
     columns:
       - name: city_name
         description: "City name"

@@ -79,38 +79,7 @@ def weather_pipeline():
             raise RuntimeError("Failed to load to RAW")
         
         logger.info(f"Loaded {nrows} to RAW_WEATHER_API table")
-        return nrows
-    
-    @task
-    def load_fact(pipeline_run_id : str):
-        from snowflake_client import get_connection, run_query
-
-        conn = get_connection()
-        sql = f"""
-            INSERT INTO WEATHER_DB.MARTS.FACT_WEATHER_READINGS
-                (city_sk, date_sk, weather_code_sk, recorded_at,
-                 temperature_c, humidity_pct, windspeed_kmh, pipeline_run_id)
-            SELECT
-                c.city_sk,
-                TO_NUMBER(TO_VARCHAR(DATE(r.recorded_at), 'YYYYMMDD')) AS date_sk,
-                COALESCE(w.code_sk, 1) AS weather_code_sk,
-                r.recorded_at,
-                r.temperature_c,
-                r.humidity_pct,
-                r.windspeed_kmh,
-                '{pipeline_run_id}' AS pipeline_run_id
-            FROM WEATHER_DB.RAW.RAW_WEATHER_API r
-            JOIN WEATHER_DB.MARTS.DIM_CITY c
-                ON r.city = c.city_nk AND c.is_current = TRUE
-            LEFT JOIN WEATHER_DB.MARTS.DIM_WEATHER_CODE w
-                ON r.weather_code = w.code_value
-            WHERE r.pipeline_run_id = '{pipeline_run_id}'
-        """
-
-        run_query(sql, conn)
-        conn.close()
-        logger.info("Loaded data to FACT table")
-    
+        return nrows    
 
     @task
     def generate_ai_summary():
@@ -126,16 +95,15 @@ def weather_pipeline():
     trigger_dbt = TriggerDagRunOperator(
         task_id="trigger_dbt_transform",
         trigger_dag_id="dbt_transform_dag",
+        wait_for_completion=True,
+        poke_interval=30,
     )
     
-
     pipeline_run_id = get_run_id()
     raw_data = weather_extract()
     rows_loaded = load_raw(raw_data, pipeline_run_id)
-    fact_loaded = load_fact(pipeline_run_id)
     summary = generate_ai_summary()
 
-    from airflow.models.baseoperator import chain
-    chain (wait_for_api, raw_data, rows_loaded, fact_loaded, summary, trigger_dbt)
+    chain(wait_for_api, raw_data, rows_loaded, trigger_dbt, summary)
 
 weather_pipeline()

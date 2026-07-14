@@ -1,11 +1,11 @@
-with weather as (
+with cities as (
 
-    select distinct
+    select
         city_name,
         country,
         latitude,
         longitude
-    from {{ ref('stg_weather') }}
+    from {{ ref('cities') }}
 
 ),
 
@@ -17,7 +17,7 @@ final as (
         country,
         latitude,
         longitude
-    from weather
+    from cities
 
 )
 

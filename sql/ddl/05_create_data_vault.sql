@@ -1,3 +1,5 @@
+--Following is a modelling exercise, not a live layer
+
 USE DATABASE WEATHER_DB;
 USE SCHEMA RAW;
 

@@ -1,3 +1,7 @@
+-- NOTE: These queries target the original hand-built star schema in
+-- WEATHER_DB.MARTS (Weeks 1-2), which has been superseded by the dbt models
+-- in WEATHER_DB.DBT_PROD. Kept as a record of the SQL techniques used.
+
 --WINDOW FUNCTIONS--
 
 -- Number each reading per city ordered by time

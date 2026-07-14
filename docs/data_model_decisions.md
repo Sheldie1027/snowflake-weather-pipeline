@@ -1,3 +1,7 @@
+> **Note:** This document describes the original hand-built dimensional model
+> (Weeks 1–2). It has been superseded by the dbt models in `DBT_PROD`. The
+> modelling decisions remain valid; only the implementation moved to dbt.
+
 # Data Model Design Decisions
 
 ## Fact Table Grains
