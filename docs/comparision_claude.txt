@@ -1,0 +1,4 @@
+Overall, Delhi stands out with unhealthy air quality and the highest heat, while Bangalore and Mumbai stay good on air quality with milder temperatures.
+Bangalore: Averaged 25.92C (20.2-32.3C) with humidity at 64.21%. Air quality was Good (PM2.5 11.59); UV low at 2.37.
+Delhi: Hot at 32.39C (28.8-35.9C) with humidity at 63.08%. Air quality was Unhealthy (PM2.5 147.2); UV low at 1.54.
+Mumbai: Averaged 28.44C (27.5-29.7C) with higher humidity at 78.67%. Air quality was Good (PM2.5 14.35); UV low at 2.26.
